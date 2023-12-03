@@ -1,0 +1,211 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "description" : "API for the jobs service",
+    "version" : "1.0.0",
+    "title" : "Jobs Service",
+    "contact" : {
+      "email" : "leulwoldegabriel@gmail.com.com",
+      "name" : "Leul Tewolde",
+      "url" : "http://www.leultewolde.com/"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags" : [ {
+    "name" : "users",
+    "description" : "users can access"
+  } ],
+  "paths" : {
+    "/jobs" : {
+      "get" : {
+        "tags" : [ "users" ],
+        "summary" : "searches jobs",
+        "operationId" : "searchJobs",
+        "description" : "By passing in the appropriate options, you can search for\navailable jobs in the system\n",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "searchString",
+          "description" : "pass an optional search string for looking up job",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "skip",
+          "description" : "number of records to skip for pagination",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "minimum" : 0
+          }
+        }, {
+          "in" : "query",
+          "name" : "limit",
+          "description" : "maximum number of records to return",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "minimum" : 0,
+            "maximum" : 50
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "search results matching criteria",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/JobItem"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "500" : {
+            "description" : "server error"
+          }
+        }
+      },
+      "post" : {
+        "summary" : "adds a job item",
+        "operationId" : "addJob",
+        "description" : "Adds an item to the system",
+        "responses" : {
+          "201" : {
+            "description" : "item created"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "500" : {
+            "description" : "server error"
+          },
+          "409" : {
+            "description" : "an existing item already exists"
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/JobItem"
+              }
+            }
+          },
+          "description" : "Job item to add"
+        },
+        "tags" : [ "users" ]
+      }
+    },
+    "/jobs/{id}" : {
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "id",
+        "required" : true,
+        "schema" : {
+          "type" : "integer"
+        }
+      } ],
+      "get" : {
+        "summary" : "adds a job item",
+        "operationId" : "getJob",
+        "description" : "Adds an item to the system",
+        "responses" : {
+          "200" : {
+            "description" : "get job with specified id",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/JobItem"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "500" : {
+            "description" : "server error"
+          },
+          "404" : {
+            "description" : "job not found parameter"
+          }
+        },
+        "tags" : [ "users" ]
+      },
+      "delete" : {
+        "summary" : "delete a job item",
+        "operationId" : "deleteJob",
+        "description" : "Delete an item from the system",
+        "responses" : {
+          "200" : {
+            "description" : "Job Successfully added"
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "500" : {
+            "description" : "server error"
+          },
+          "404" : {
+            "description" : "job not found parameter"
+          }
+        },
+        "tags" : [ "users" ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "JobItem" : {
+        "type" : "object",
+        "required" : [ "id", "position", "company", "foundOn", "jobDescription", "website", "applicationTracker", "applicationDate" ],
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid",
+            "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "position" : {
+            "type" : "string",
+            "example" : "Full Stack Developrt"
+          },
+          "company" : {
+            "type" : "string",
+            "example" : "Google"
+          },
+          "foundOn" : {
+            "type" : "string",
+            "example" : "LinkedIn"
+          },
+          "website" : {
+            "type" : "string",
+            "example" : "http://google.com"
+          },
+          "applicationTracker" : {
+            "type" : "string",
+            "example" : "http://google.com/myjobs"
+          },
+          "jobDescription" : {
+            "type" : "string",
+            "example" : "http://jobdesc.com"
+          },
+          "applicationDate" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2016-08-29T09:12:33.001Z"
+          }
+        }
+      }
+    }
+  }
+}
